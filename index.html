@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Demo of Mapzen routing through CartoDB SQL API</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+  <link rel="stylesheet" href="dist/themes/css/cartodb.css" />
+  <link rel="stylesheet" href="index.css" media="screen">
+  <link rel="shortcut icon" href="favicon.ico" />
+
+  <script src="//localhost:9091"></script>
+</head>
+
+
+<body>
+  <div id="map"></div>
+
+  <div class="cartodb-legend-stack js-legend">
+
+  </div>
+
+  <script type="text/template" id="legend-tpl" >
+    <div class="CDB-Legend">
+      <h2 class="CDB-Legend-title">Route</h2>
+      <ul class="CDB-Legend-list">
+        <li class="CDB-Legend-listItem">
+          <svg class="CDB-Legend-line CDB-Legend-line--car" viewPort="0 0 100 10">
+              <line x1="5" y1="5" x2="92" y2="5"/>
+          </svg>
+          <span class="CDB-Legend-listItemText">car (<span class="CDB-Legend-duration"><%= durationMn.car %></span>)</span>
+        </li>
+        <li class="CDB-Legend-listItem">
+          <svg class="CDB-Legend-line CDB-Legend-line--bicycle" viewPort="0 0 100 10">
+              <line x1="2" y1="5" x2="98" y2="5"/>
+          </svg>
+          <span class="CDB-Legend-listItemText">bicycle (<span class="CDB-Legend-duration"><%= durationMn.bicycle %></span>)</span>
+        </li>
+        <li class="CDB-Legend-listItem">
+          <svg class="CDB-Legend-line CDB-Legend-line--walk" viewPort="0 0 100 10">
+              <line x1="2" y1="5" x2="98" y2="5"/>
+          </svg>
+          <span class="CDB-Legend-listItemText">walk (<span class="CDB-Legend-duration"><%= durationMn.walk %></span>)</span>
+        </li>
+      </ul>
+    </div>
+  </script>
+
+  <!-- <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script> -->
+  <!-- <script src="dist/cartodb.min.js"></script> -->
+  <script src="dist/cartodb.uncompressed.js"></script>
+  <script type="text/javascript" src="index.js"></script>
+</body>
+</html>

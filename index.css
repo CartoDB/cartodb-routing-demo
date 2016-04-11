@@ -1,0 +1,112 @@
+html, body, #map {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.marker-start, .marker-dest {
+  color: #fff;
+  font-weight: bold;
+}
+
+.marker-start {
+  background: #fff;
+  border: 5px solid black;
+  border-radius: 99px;
+  width: 8px !important;
+  height: 8px !important;
+
+}
+
+.marker-dest {
+    background: #00f;
+}
+
+.path-car, .path-walk, .path-bicycle {
+  stroke-opacity: 1;
+  pointer-events: none;
+}
+
+.path-car, .CDB-Legend-line--car line {
+  stroke-width: 9px;
+  stroke: #01A3B0;
+  stroke-linecap: round;
+}
+
+.path-bicycle, .CDB-Legend-line--bicycle line {
+  stroke-dasharray: 5,7;
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke: #40BE93;
+}
+.path-walk, .CDB-Legend-line--walk line {
+  stroke-dasharray: 0,8;
+  stroke-linecap: round;
+  stroke-width: 4px;
+  stroke: #F2944D;
+}
+
+div.cartodb-legend-stack {
+  top: 8px;
+  box-shadow: none;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  bottom: auto;
+  right: auto;
+}
+.CDB-Legend {
+  position: absolute;
+  border-radius: 4px;
+  background: #FFF;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,.24),0 4px 8px 0 rgba(0,0,0,.16);
+  z-index: 2;
+  top: 16px;
+  left: 16px;
+  padding: 16px 16px 8px 16px;
+  width: 200px;
+}
+.CDB-Legend-title {
+  font: 600 12px/16px 'Open Sans';
+  color: #2E3C43;
+}
+.CDB-Legend-listItem {
+  font: 600 10px/14px 'Open Sans';
+  color: #2E3C43;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  position: relative;
+}
+.CDB-Legend-listItem:last-child {
+  margin-bottom: 0;
+}
+.CDB-Legend-listItem:last-child {
+  margin-bottom: 0;
+}
+.CDB-Legend-list {
+  padding: 8px 0 0 0;
+  margin: 8px 0 20px 0;
+}
+
+.CDB-Legend-pointText {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.CDB-Legend-line {
+  width: 100px;
+  height: 10px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.CDB-Legend-listItemText {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
+.CDB-Legend-duration {
+  text-transform: lowercase;
+}
