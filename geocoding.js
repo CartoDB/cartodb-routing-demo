@@ -89,8 +89,10 @@
     var destIcon = L.icon({iconUrl: 'pin.svg', iconAnchor: [10, 37]});
 
     var queries = {
-      country: cartodb._.template('SELECT <%= cacheBuster %>, name, cdb_geocode_admin0_polygon(name) the_geom FROM world_borders ORDER BY RANDOM() limit 1'),
-      city: cartodb._.template('SELECT <%= cacheBuster %>, name, cdb_geocode_namedplace_point(name) the_geom FROM ne_110m_populated_places_simple ORDER BY RANDOM() limit 1')
+      country: cartodb._.template("SELECT <%= cacheBuster %>, name, cdb_geocode_admin0_polygon(name) the_geom FROM world_borders ORDER BY RANDOM() limit 1"),
+      region: cartodb._.template("SELECT <%= cacheBuster %>, ain3 as name, cdb_geocode_admin1_polygon(ain3, 'France') the_geom FROM departement ORDER BY RANDOM() limit 1"),
+      city: cartodb._.template("SELECT <%= cacheBuster %>, name, cdb_geocode_namedplace_point(name) the_geom FROM ne_110m_populated_places_simple ORDER BY RANDOM() limit 1"),
+      postal_code: cartodb._.template("SELECT <%= cacheBuster %>, postcode as name, cdb_geocode_postalcode_polygon(postcode::text, 'Australia') the_geom FROM australia_postalcodes ORDER BY RANDOM() limit 1")
     }
 
     var sql = new cartodb.SQL({
@@ -124,8 +126,15 @@
       })
       .done(function(data){
         console.log(data);
-        var geoJSONLayer = L.geoJson(data).addTo(map);
+        var geoJSONLayer = L.geoJson(data, {
+          pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {icon: destIcon});
+          }
+        }).addTo(map);
+
+
         if (['region','country'].indexOf(type) > -1) {
+          console.log('poly')
           map.fitBounds(geoJSONLayer.getBounds())
         } else {
           map.setView(geoJSONLayer.getBounds().getSouthWest(), 10);
