@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Demo of geocoding through CartoDB SQL API</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+  <link rel="stylesheet" href="dist/themes/css/cartodb.css" />
+  <link rel="stylesheet" href="index.css" media="screen">
+  <link rel="shortcut icon" href="favicon.ico" />
+
+  <script src="//localhost:9091"></script>
+</head>
+
+
+<body>
+  <div id="map">
+    <div class="gcTabs">
+      <div class="gcTab js-gcTab selected" data-type="country">Country</div>
+      <div class="gcTab js-gcTab" data-type="region">Administrative regions</div>
+      <div class="gcTab js-gcTab" data-type="city">City</div>
+      <div class="gcTab js-gcTab" data-type="postal_code">Postal codes</div>
+      <div class="gcTab js-gcTab" data-type="ip">IPs</div>
+      <div class="gcTab js-gcTab" data-type="street">Street-level</div>
+    </div>
+
+  </div>
+
+  <script src="dist/cartodb.min.js"></script>
+  <script type="text/javascript" src="geocoding.js"></script>
+</body>
+</html>
