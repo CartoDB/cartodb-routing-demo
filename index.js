@@ -1,9 +1,7 @@
 ;(function() {
   function main() {
     var vizjson = {
-      'id':'2b13c956-e7c1-11e2-806b-5404a6a683d5',
       'version':'0.1.0',
-      'title':'european_countries_e 0',
       'scrollwheel':false,
       'legends':false,
       'map_provider':'leaflet',
@@ -21,10 +19,8 @@
       'zoom':13,
       'updated_at':'2015-03-13T11:24:37+00:00',
       'datasource': {
-        'user_name': 'nerikcarto',
-        'maps_api_template': 'http://{user}.cartodb.com:80',
-        'force_cors': true, // This is sometimes set in the editor,
-        'stat_tag': '84ec6844-4b4b-11e5-9c1d-080027880ca6'
+        'user_name': 'nerik-awesomerouting',
+        'maps_api_template': 'https://{user}.cartodb.com',
       },
       'layers':[
         {
