@@ -32,7 +32,8 @@
     "http-server": "^0.8.5",
     "jsmin": "^1.0.1",
     "live-reload": "^1.1.0",
-    "opener": "^1.4.1"
+    "opener": "^1.4.1",
+    "uglify-js": "^2.6.2"
   },
   "dependencies": {}
 }
