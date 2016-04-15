@@ -56,12 +56,7 @@
             'y':150
           }
         },
-        {
-          'type':'search',
-          'options':{
-            'display':true
-          }
-        },
+
         {
           'type':'zoom',
           'options':{
@@ -84,16 +79,17 @@
       console.log(err);
     });
 
-    var queryTpl = cartodb._.template("SELECT duration, length, shape as the_geom, '<%= mode %>' as mode FROM cdb_route_point_to_point('POINT(<%= s.lng %> <%= s.lat %>)'::geometry,'POINT(<%= d.lng %> <%= d.lat %>)'::geometry, '<%= mode %>')");
-
     var destIcon = L.icon({iconUrl: 'pin.svg', iconAnchor: [10, 37]});
 
+    var baseQuery = cartodb._.template("SELECT <%= cacheBuster %>, <%= selects %> FROM <%= table %> WHERE cartodb_id >= RANDOM() * (SELECT MAX (cartodb_id) FROM <%= table %>) ORDER BY cartodb_id limit 1");
+
     var queries = {
-      country: cartodb._.template("SELECT <%= cacheBuster %>, name, cdb_geocode_admin0_polygon(name) the_geom FROM world_borders ORDER BY RANDOM() limit 1"),
-      region: cartodb._.template("SELECT <%= cacheBuster %>, ain3 as name, cdb_geocode_admin1_polygon(ain3, 'France') the_geom FROM departement ORDER BY RANDOM() limit 1"),
-      city: cartodb._.template("SELECT <%= cacheBuster %>, name, cdb_geocode_namedplace_point(name) the_geom FROM ne_110m_populated_places_simple ORDER BY RANDOM() limit 1"),
-      postal_code: cartodb._.template("SELECT <%= cacheBuster %>, postal_code || ' (Canada)' as name, cdb_geocode_postalcode_polygon(postal_code::text, 'Canada') the_geom FROM ca_postal_codes ORDER BY RANDOM() limit 1"),
-      ip: cartodb._.template("SELECT <%= cacheBuster %>, ip as name, cdb_geocode_ipaddress_point(ip) the_geom FROM ips ORDER BY RANDOM() limit 1")
+      country: ["name, cdb_geocode_admin0_polygon(name) the_geom", "countries"],
+      region: ["ain3 || ' (France)' as name, cdb_geocode_admin1_polygon(ain3, 'France') the_geom", "departement"],
+      city: ["name, cdb_geocode_namedplace_point(name) the_geom", "cities"],
+      postal_code: ["postal_code || ' (Canada)' as name, cdb_geocode_postalcode_polygon(postal_code::text, 'Canada') the_geom", "ca_postal_codes"],
+      ip: ["ip as name, cdb_geocode_ipaddress_point(ip) the_geom", "ips"],
+      street: ["name, cdb_geocode_street_point(name, NULL, NULL, 'USA') the_geom", "fastfood_addresses"]
     }
 
     var sql = new cartodb.SQL({
@@ -103,7 +99,8 @@
         sql_api_template: 'https://{user}.cartodb.com:443',
     });
 
-    var map;
+    var map, geoJSONLayer, label;
+    var currentType;
 
     function initViz() {
 
@@ -112,8 +109,9 @@
       map.setView([40.409, -3.705], 16);
 
       cartodb.$('.js-gcTab').on('click', onTabClick);
+      cartodb.$('#map').on('click', '.js-lucky', onLuckyClick);
 
-      loadFeature('country')
+      loadFeature('country');
     }
 
     function onTabClick(event) {
@@ -128,10 +126,22 @@
 
     }
 
+    function onLuckyClick() {
+      cartodb.$('.js-lucky').addClass('disabled');
+      loadFeature(currentType);
+    }
+
     function loadFeature(type) {
       var isPoly = ['region','country', 'postal_code'].indexOf(type) > -1;
 
-      var query = queries[type]({cacheBuster: Math.random()});
+      var query = baseQuery({
+        selects: queries[type][0],
+        table: queries[type][1],
+        cacheBuster: Math.random()
+      });
+
+      currentType = type;
+
       sql.execute(query, {}, {
         format: 'geojson'
       })
@@ -141,7 +151,11 @@
           loadFeature(type)
           return;
         }
-        var geoJSONLayer = L.geoJson(data, {
+        if (geoJSONLayer) {
+          map.removeLayer(geoJSONLayer);
+          map.removeLayer(label);
+        }
+        geoJSONLayer = L.geoJson(data, {
           style: function (feature) {
             return {
               className: 'gc-feature'
@@ -152,10 +166,10 @@
           },
           onEachFeature: function(feature, layer) {
             var coords = (isPoly) ? layer.getBounds().getCenter() : layer.getLatLng();
-            var label = L.marker(coords, {
+            label = L.marker(coords, {
               icon: L.divIcon({
                 className: '',
-                html: '<div class="gc-featureLabel">'+feature.properties.name+'</div>',
+                html: '<div class="gc-featureLabel"><div class="gc-featureLabelLbl">'+feature.properties.name+'</div><div class="gc-featureLabelBtn js-lucky">I\'m feeling lucky!</div></div>',
               })
             }).addTo(map)
           }
