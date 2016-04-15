@@ -112,6 +112,8 @@
       map.setView([40.409, -3.705], 16);
 
       cartodb.$('.js-gcTab').on('click', onTabClick);
+
+      loadFeature('country')
     }
 
     function onTabClick(event) {
@@ -135,7 +137,7 @@
       })
       .done(function(data){
         if (!data.features[0].geometry) {
-          console.log('geocoding failed')
+          // console.log('geocoding failed')
           loadFeature(type)
           return;
         }
@@ -154,7 +156,6 @@
               icon: L.divIcon({
                 className: '',
                 html: '<div class="gc-featureLabel">'+feature.properties.name+'</div>',
-                // iconSize: [100, 40]
               })
             }).addTo(map)
           }
@@ -169,8 +170,6 @@
       })
       console.log(query)
     }
-
-
 
   }
   window.onload = main;
