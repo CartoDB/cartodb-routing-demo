@@ -32,7 +32,7 @@
             'name':'Positron',
             'className':'default positron_rainbow',
             'base_type':'positron_rainbow',
-            'urlTemplate':'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            'urlTemplate':'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
             'read_only':true,
             'minZoom':'0',
             'maxZoom':'18',
@@ -92,7 +92,8 @@
       country: cartodb._.template("SELECT <%= cacheBuster %>, name, cdb_geocode_admin0_polygon(name) the_geom FROM world_borders ORDER BY RANDOM() limit 1"),
       region: cartodb._.template("SELECT <%= cacheBuster %>, ain3 as name, cdb_geocode_admin1_polygon(ain3, 'France') the_geom FROM departement ORDER BY RANDOM() limit 1"),
       city: cartodb._.template("SELECT <%= cacheBuster %>, name, cdb_geocode_namedplace_point(name) the_geom FROM ne_110m_populated_places_simple ORDER BY RANDOM() limit 1"),
-      postal_code: cartodb._.template("SELECT <%= cacheBuster %>, postcode as name, cdb_geocode_postalcode_polygon(postcode::text, 'Australia') the_geom FROM australia_postalcodes ORDER BY RANDOM() limit 1")
+      postal_code: cartodb._.template("SELECT <%= cacheBuster %>, postal_code || ' (Canada)' as name, cdb_geocode_postalcode_polygon(postal_code::text, 'Canada') the_geom FROM ca_postal_codes ORDER BY RANDOM() limit 1"),
+      ip: cartodb._.template("SELECT <%= cacheBuster %>, ip as name, cdb_geocode_ipaddress_point(ip) the_geom FROM ips ORDER BY RANDOM() limit 1")
     }
 
     var sql = new cartodb.SQL({
@@ -120,21 +121,47 @@
       cartodb.$(event.target).addClass('selected');
 
       var type = cartodb.$(event.target).data('type');
+
+      loadFeature(type);
+
+    }
+
+    function loadFeature(type) {
+      var isPoly = ['region','country', 'postal_code'].indexOf(type) > -1;
+
       var query = queries[type]({cacheBuster: Math.random()});
       sql.execute(query, {}, {
         format: 'geojson'
       })
       .done(function(data){
-        console.log(data);
+        if (!data.features[0].geometry) {
+          console.log('geocoding failed')
+          loadFeature(type)
+          return;
+        }
         var geoJSONLayer = L.geoJson(data, {
+          style: function (feature) {
+            return {
+              className: 'gc-feature'
+            }
+          },
           pointToLayer: function (feature, latlng) {
             return L.marker(latlng, {icon: destIcon});
+          },
+          onEachFeature: function(feature, layer) {
+            var coords = (isPoly) ? layer.getBounds().getCenter() : layer.getLatLng();
+            var label = L.marker(coords, {
+              icon: L.divIcon({
+                className: '',
+                html: '<div class="gc-featureLabel">'+feature.properties.name+'</div>',
+                // iconSize: [100, 40]
+              })
+            }).addTo(map)
           }
         }).addTo(map);
 
 
-        if (['region','country'].indexOf(type) > -1) {
-          console.log('poly')
+        if (isPoly) {
           map.fitBounds(geoJSONLayer.getBounds())
         } else {
           map.setView(geoJSONLayer.getBounds().getSouthWest(), 10);
@@ -142,6 +169,7 @@
       })
       console.log(query)
     }
+
 
 
   }
