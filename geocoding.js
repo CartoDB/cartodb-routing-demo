@@ -177,9 +177,9 @@
 
 
         if (isPoly) {
-          map.fitBounds(geoJSONLayer.getBounds())
+          map.fitBounds(geoJSONLayer.getBounds().pad(.3))
         } else {
-          map.setView(geoJSONLayer.getBounds().getSouthWest(), 10);
+          map.setView(geoJSONLayer.getBounds().getSouthWest(), (['ip','city'].indexOf(type) > -1) ? 6 : 10);
         }
       })
       console.log(query)
