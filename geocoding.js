@@ -83,19 +83,26 @@
 
     var baseQuery = cartodb._.template("SELECT <%= cacheBuster %>, <%= selects %> FROM <%= table %> WHERE cartodb_id >= RANDOM() * (SELECT MAX (cartodb_id) FROM <%= table %>) ORDER BY cartodb_id limit 1");
 
+    // var queries = {
+    //   country: ["name, cdb_geocode_admin0_polygon(name) the_geom", "countries"],
+    //   region: ["ain3 || ' (France)' as name, cdb_geocode_admin1_polygon(ain3, 'France') the_geom", "departement"],
+    //   city: ["name, cdb_geocode_namedplace_point(name) the_geom", "cities"],
+    //   postal_code: ["postal_code || ' (Canada)' as name, cdb_geocode_postalcode_polygon(postal_code::text, 'Canada') the_geom", "ca_postal_codes"],
+    //   ip: ["ip as name, cdb_geocode_ipaddress_point(ip) the_geom", "ips"],
+    //   street: ["name, cdb_geocode_street_point(name, NULL, NULL, 'USA') the_geom", "fastfood_addresses"]
+    // }
     var queries = {
-      country: ["name, cdb_geocode_admin0_polygon(name) the_geom", "countries"],
-      region: ["ain3 || ' (France)' as name, cdb_geocode_admin1_polygon(ain3, 'France') the_geom", "departement"],
-      city: ["name, cdb_geocode_namedplace_point(name) the_geom", "cities"],
-      postal_code: ["postal_code || ' (Canada)' as name, cdb_geocode_postalcode_polygon(postal_code::text, 'Canada') the_geom", "ca_postal_codes"],
-      ip: ["ip as name, cdb_geocode_ipaddress_point(ip) the_geom", "ips"],
-      street: ["name, cdb_geocode_street_point(name, NULL, NULL, 'USA') the_geom", "fastfood_addresses"]
+      country: ["name, the_geom", "countries"],
+      region: ["ain3 || ' (France)' as name, the_geom", "departement"],
+      city: ["name, the_geom", "cities"],
+      postal_code: ["postal_code || ' (Canada)' as name, the_geom", "ca_postal_codes"],
+      ip: ["ip as name, the_geom", "ips"],
+      street: ["name, the_geom", "fastfood_addresses_copy"]
     }
 
     var sql = new cartodb.SQL({
         user: 'nerik-awesomerouting',
         protocol: 'https',
-        api_key: 'ea7bf48800b95e02c87a67f6cc74cbb1b29d1b79',
         sql_api_template: 'https://{user}.cartodb.com:443',
     });
 
@@ -117,9 +124,11 @@
       if (!map) return;
 
       cartodb.$('.js-gcTab').removeClass('selected');
-      cartodb.$(event.target).addClass('selected');
 
-      var type = cartodb.$(event.target).data('type');
+      var tab = (cartodb.$(event.target).hasClass('js-gcTab')) ? cartodb.$(event.target) : cartodb.$(event.target).parents('.js-gcTab');
+      tab.addClass('selected');
+
+      var type = tab.data('type');
 
       loadFeature(type);
 
