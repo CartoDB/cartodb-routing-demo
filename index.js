@@ -94,7 +94,7 @@
       var sql = new cartodb.SQL({
           user: 'nerik-awesomerouting',
           protocol: 'https',
-          api_key: 'ea7bf48800b95e02c87a67f6cc74cbb1b29d1b79',
+          api_key: '0c175ff371f6ea75d74ccbf6a8feee6b0f2af971',
           sql_api_template: 'https://{user}.cartodb.com:443',
       });
       var map = vis.getNativeMap();
