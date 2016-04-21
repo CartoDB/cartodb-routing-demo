@@ -91,12 +91,7 @@
     var destIcon = L.icon({iconUrl: 'pin.svg', iconAnchor: [10, 37]});
 
     function initViz() {
-      var sql = new cartodb.SQL({
-          user: 'nerik-awesomerouting',
-          protocol: 'https',
-          api_key: 'ea7bf48800b95e02c87a67f6cc74cbb1b29d1b79',
-          sql_api_template: 'https://{user}.cartodb.com:443',
-      });
+
       var map = vis.getNativeMap();
       var markerStart = L.marker([40.410789, -3.712235], {draggable: true, icon: startIcon}).addTo(map);
       var markerDest = L.marker([40.409938, -3.697953], {draggable: true, icon: destIcon}).addTo(map);
@@ -120,10 +115,15 @@
         })
         var query = queryParts.join('UNION ALL ');
 
-        sql.execute(query, {}, {
-          format: 'geojson'
-        })
-        .done(function(data){
+        cartodb.$.getJSON("http://routing.cartodb.io/sql/items/?q="+query
+        /*, {
+          mode: 'car',
+          slat: markerStart.getLatLng().lat,
+          slng: markerStart.getLatLng().lng,
+          dlat: markerDest.getLatLng().lat,
+          dlng: markerDest.getLatLng().lng,
+        }*/
+        , function(data) {
           drawPaths(data);
         })
       }
