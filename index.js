@@ -104,8 +104,8 @@
       }
 
       function fetchRoutes() {
-        // cartodb.$.getJSON("http://routing.cartodb.io/sql/items/?q="+query
-        cartodb.$.getJSON('http://localhost:5000/sql/items/'
+        cartodb.$.getJSON("http://routing.cartodb.io/sql/items/"
+        // cartodb.$.getJSON('http://localhost:5000/sql/items/'
         , {
           slat: markerStart.getLatLng().lat,
           slng: markerStart.getLatLng().lng,
