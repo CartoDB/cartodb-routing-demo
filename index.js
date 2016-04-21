@@ -104,25 +104,14 @@
       }
 
       function fetchRoutes() {
-        var queryParts = [];
-        ['car','walk','bicycle'].forEach(function (mode) {
-          var q = queryTpl({
-            s: markerStart.getLatLng(),
-            d: markerDest.getLatLng(),
-            mode: mode
-          });
-          queryParts.push(q);
-        })
-        var query = queryParts.join('UNION ALL ');
-
-        cartodb.$.getJSON("http://routing.cartodb.io/sql/items/?q="+query
-        /*, {
-          mode: 'car',
+        // cartodb.$.getJSON("http://routing.cartodb.io/sql/items/?q="+query
+        cartodb.$.getJSON('http://localhost:5000/sql/items/'
+        , {
           slat: markerStart.getLatLng().lat,
           slng: markerStart.getLatLng().lng,
           dlat: markerDest.getLatLng().lat,
           dlng: markerDest.getLatLng().lng,
-        }*/
+        }
         , function(data) {
           drawPaths(data);
         })
