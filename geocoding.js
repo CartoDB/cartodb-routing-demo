@@ -109,7 +109,6 @@
       map.setView([40.409, -3.705], 16);
 
       cartodb.$('.js-gcTab').on('click', onTabClick);
-      cartodb.$('#map').on('click', '.js-lucky', onLuckyClick);
 
       loadFeature('country');
     }
@@ -124,11 +123,6 @@
 
       loadFeature(type);
 
-    }
-
-    function onLuckyClick() {
-      cartodb.$('.js-lucky').addClass('disabled');
-      loadFeature(currentType);
     }
 
     function loadFeature(type) {
@@ -169,7 +163,7 @@
             label = L.marker(coords, {
               icon: L.divIcon({
                 className: '',
-                html: '<div class="gc-featureLabel"><div class="gc-featureLabelLbl">'+feature.properties.name+'</div><div class="gc-featureLabelBtn js-lucky">I\'m feeling lucky!</div></div>',
+                html: '<div class="gc-featureLabel"><div class="gc-featureLabelLbl">'+feature.properties.name+'</div></div>',
               })
             }).addTo(map)
           }
