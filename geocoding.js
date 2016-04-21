@@ -163,7 +163,10 @@
             label = L.marker(coords, {
               icon: L.divIcon({
                 className: '',
-                html: '<div class="gc-featureLabel"><div class="gc-featureLabelLbl">'+feature.properties.name+'</div></div>',
+                html: cartodb._.template('<div class="gc-featureLabel"><div class="gc-featureLabelLbl<% if (isPoly) {%> gc-featureLabelLbl--poly<%}%>"><%= name %></div></div>')({
+                  name: feature.properties.name,
+                  isPoly: isPoly
+                }),
               })
             }).addTo(map)
           }
