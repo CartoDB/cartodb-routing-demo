@@ -92,6 +92,13 @@
 
     function initViz() {
 
+      var sql = new cartodb.SQL({
+          user: 'nerik-awesomerouting',
+          protocol: 'https',
+          api_key: '0c175ff371f6ea75d74ccbf6a8feee6b0f2af971',
+          sql_api_template: 'https://{user}.cartodb.com:443',
+      });
+
       var map = vis.getNativeMap();
       var markerStart = L.marker([40.410789, -3.712235], {draggable: true, icon: startIcon}).addTo(map);
       var markerDest = L.marker([40.409938, -3.697953], {draggable: true, icon: destIcon}).addTo(map);
