@@ -125,7 +125,6 @@
         var durationMn = {};
         geoJSONLayer = L.geoJson(data, {
           style: function (feature) {
-            console.log(feature.properties)
             return {
               className: 'path-' + feature.properties.mode
             }
