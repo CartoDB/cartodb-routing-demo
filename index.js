@@ -104,17 +104,22 @@
       }
 
       function fetchRoutes() {
-        cartodb.$.getJSON("https://routing.cartodb.io/sql/items/"
-        // cartodb.$.getJSON('http://localhost:5000/sql/items/'
+        cartodb.$.getJSON("https://routing.carto.io/sql/items/"
+        //cartodb.$.getJSON('http://localhost:5000/sql/items/'
         , {
           slat: markerStart.getLatLng().lat,
           slng: markerStart.getLatLng().lng,
           dlat: markerDest.getLatLng().lat,
           dlng: markerDest.getLatLng().lng,
-        }
-        , function(data) {
-          drawPaths(data);
         })
+        .done(drawPaths)
+        .fail(function( jqxhr, textStatus, error ) {
+          var err = textStatus + ", " + error;
+          console.log( "Request Failed: " + err );
+          if (jqxhr.responseJSON.error){
+            alert(jqxhr.responseJSON.error);
+          }
+        });
       }
 
       function drawPaths(data) {
